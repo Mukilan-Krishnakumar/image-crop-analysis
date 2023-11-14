@@ -259,6 +259,7 @@ class ImageSaliencyModel(object):
             aspectRatios = [0.56, 1.0, 1.14, 2.0, img_h / img_w]
 
         output = self.get_output(img_path, aspectRatios=aspectRatios)
+        print("Got this output\n", output)
         n_crops = len(output["crops"])
         salient_x, salient_y, = output[
             "salient_point"
