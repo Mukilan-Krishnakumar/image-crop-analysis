@@ -250,6 +250,8 @@ class ImageSaliencyModel(object):
         img = mpimg.imread(img_path)
         img_h, img_w = img.shape[:2]
 
+        print("Whether to proceed or not")
+
         print(aspectRatios, img_w, img_h)
         print("Checking if this change is relfected")
 
