@@ -390,7 +390,7 @@ class ImageSaliencyModel(object):
             if t == 0:
                 x, y, w, h = generate_crop(img, salient_x, salient_y, aspectRatio)
                 
-       return (x, y, w, h)
+        return (x, y, w, h)
         
 
 
