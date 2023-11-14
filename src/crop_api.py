@@ -250,10 +250,9 @@ class ImageSaliencyModel(object):
         img = mpimg.imread(img_path)
         img_h, img_w = img.shape[:2]
 
-        print("Whether to proceed or not")
+        logging.info(f"This is working?")
 
         print(aspectRatios, img_w, img_h)
-        print("Checking if this change is relfected")
 
         if aspectRatios is None:
             aspectRatios = self.aspectRatios
@@ -261,9 +260,7 @@ class ImageSaliencyModel(object):
         if aspectRatios is None:
             aspectRatios = [0.56, 1.0, 1.14, 2.0, img_h / img_w]
 
-        print("Print before output")
         output = self.get_output(img_path, aspectRatios=aspectRatios)
-        print("This is the output", output)
         n_crops = len(output["crops"])
         salient_x, salient_y, = output[
             "salient_point"
