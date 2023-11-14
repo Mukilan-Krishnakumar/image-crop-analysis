@@ -300,7 +300,6 @@ class ImageSaliencyModel(object):
 
         # Sort based on saliency score
         all_salient_points = output["all_salient_points"]
-        print("The best point",all_salient_points[0])
         sx, sy, sz = zip(*sorted(all_salient_points, key=lambda x: x[-1], reverse=True))
         sx = np.asarray(sx)
         sy = np.asarray(sy)
@@ -318,6 +317,9 @@ class ImageSaliencyModel(object):
 
         for t in range(0, topK):
             salient_x, salient_y, saliency_score = sx[t], sy[t], sz[t]
+            if i == 0:
+                print("The best")
+                print(salient_x, salient_y, saliency_score)
             logging.info(f"t={t}: {(salient_x, salient_y, saliency_score)}")
             if n_crops > 1 or (t == 0 and n_crops == 1):
                 ax_map = fig.add_subplot(gs[t * per_K_rows, 0])
