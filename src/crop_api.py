@@ -388,9 +388,6 @@ class ImageSaliencyModel(object):
         t = 0
         salient_x, salient_y, saliency_score = sx[t], sy[t], sz[t]
         logging.info(f"t={t}: {(salient_x, salient_y, saliency_score)}")
-        if n_crops > 1 or (t == 0 and n_crops == 1):
-            ax_map = fig.add_subplot(gs[t * per_K_rows, 0])
-            ax_map = self.plot_saliency_map(img, all_salient_points, ax=ax_map)
 
         for i, original_crop in enumerate(output["crops"]):
             aspectRatio = aspectRatios[i]
