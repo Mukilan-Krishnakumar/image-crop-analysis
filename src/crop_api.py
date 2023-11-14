@@ -332,11 +332,6 @@ class ImageSaliencyModel(object):
                         sharey=ax_map,
                     )
                 aspectRatio = aspectRatios[i]
-                if t == 0:
-                    print("The best")
-                    print(salient_x, salient_y, saliency_score)
-                    x, y, w, h = generate_crop(img, salient_x, salient_y, aspectRatio)
-                    print("Got this,", x, y, w, h)
                 self.plot_crop_area(
                     img,
                     salient_x,
@@ -356,11 +351,12 @@ class ImageSaliencyModel(object):
     def crop_based_on_aspect_ratio(self,img_path,topK=1,aspectRatios=None,checkSymmetry=True,sample=False,col_wrap=None, add_saliency_line=True):
         img = mpimg.imread(img_path)
         img_h, img_w = img.shape[:2]    
+        aspect_ratio = img_w / img_h
+        aspect_ratio = round(aspect_ratio, 2)
         if aspectRatios is None:
-            aspectRatios = self.aspectRatios
+            aspectRatios = [aspect_ratio]
 
-        if aspectRatios is None:
-            aspectRatios = [0.56, 1.0, 1.14, 2.0, img_h / img_w]
+        print("Current Aspect Ratio of image", aspect_ratio)
 
         output = self.get_output(img_path, aspectRatios=aspectRatios)
         n_crops = len(output["crops"])
