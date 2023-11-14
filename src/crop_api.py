@@ -250,7 +250,6 @@ class ImageSaliencyModel(object):
         img = mpimg.imread(img_path)
         img_h, img_w = img.shape[:2]
 
-        logging.info(f"This is working?")
 
         print(aspectRatios, img_w, img_h)
 
@@ -348,6 +347,10 @@ class ImageSaliencyModel(object):
             ax = fig.add_subplot(gs[-1, :])
             self.plot_saliency_scores_for_index(img, all_salient_points, ax=ax)
         fig.tight_layout()
+
+    def custom_plot(self, img_path, aspectRatios):
+        self.plot_img_crops(img_path, aspectRatios = aspectRatios)
+        return self
 
     def plot_img_crops_using_img(
         self,
