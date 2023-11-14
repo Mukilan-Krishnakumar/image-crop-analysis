@@ -353,6 +353,55 @@ class ImageSaliencyModel(object):
             self.plot_saliency_scores_for_index(img, all_salient_points, ax=ax)
         fig.tight_layout()
 
+    def crop_based_on_aspect_ratio(self,img_path,topK=1,aspectRatios=None,checkSymmetry=True,sample=False,col_wrap=None, add_saliency_line=True):
+        img = mpimg.imread(img_path)
+        img_h, img_w = img.shape[:2]    
+        if aspectRatios is None:
+            aspectRatios = self.aspectRatios
+
+        if aspectRatios is None:
+            aspectRatios = [0.56, 1.0, 1.14, 2.0, img_h / img_w]
+
+        output = self.get_output(img_path, aspectRatios=aspectRatios)
+        n_crops = len(output["crops"])
+        salient_x, salient_y, = output["salient_point"][0]
+        # img_w, img_h = img.shape[:2]
+        
+        # Sort based on saliency score
+        all_salient_points = output["all_salient_points"]
+        sx, sy, sz = zip(*sorted(all_salient_points, key=lambda x: x[-1], reverse=True))
+        sx = np.asarray(sx)
+        sy = np.asarray(sy)
+        sz = np.asarray(sz)
+        if sample:
+            n_salient_points = len(all_salient_points)
+            p = np.exp(sz)
+            p = p / p.sum()
+            sample_indices = np.random.choice(
+                n_salient_points, size=n_salient_points, replace=False, p=p
+            )
+            sx = sx[sample_indices]
+            sy = sy[sample_indices]
+            sz = sy[sample_indices]
+
+        # t = 0 because we need the best crop
+        t = 0
+        salient_x, salient_y, saliency_score = sx[t], sy[t], sz[t]
+        logging.info(f"t={t}: {(salient_x, salient_y, saliency_score)}")
+        if n_crops > 1 or (t == 0 and n_crops == 1):
+            ax_map = fig.add_subplot(gs[t * per_K_rows, 0])
+            ax_map = self.plot_saliency_map(img, all_salient_points, ax=ax_map)
+
+        for i, original_crop in enumerate(output["crops"]):
+            aspectRatio = aspectRatios[i]
+            if t == 0:
+                print("The best")
+                print(salient_x, salient_y, saliency_score)
+                x, y, w, h = generate_crop(img, salient_x, salient_y, aspectRatio)
+                print("Got this,", x, y, w, h)
+        print("It works!!")
+        
+
 
     def plot_img_crops_using_img(
         self,
