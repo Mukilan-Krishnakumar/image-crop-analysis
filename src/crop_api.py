@@ -388,11 +388,9 @@ class ImageSaliencyModel(object):
         for i, original_crop in enumerate(output["crops"]):
             aspectRatio = aspectRatios[i]
             if t == 0:
-                print("The best")
-                print(salient_x, salient_y, saliency_score)
                 x, y, w, h = generate_crop(img, salient_x, salient_y, aspectRatio)
-                print("Got this,", x, y, w, h)
-        print("It works!!")
+                
+       return (x, y, w, h)
         
 
 
