@@ -317,11 +317,6 @@ class ImageSaliencyModel(object):
 
         for t in range(0, topK):
             salient_x, salient_y, saliency_score = sx[t], sy[t], sz[t]
-            if t == 0:
-                print("The best")
-                print(salient_x, salient_y, saliency_score)
-                x, y, w, h = generate_crop(img, salient_x, salient_y, aspectRatio)
-                print("Got this,", x, y, w, h)
             logging.info(f"t={t}: {(salient_x, salient_y, saliency_score)}")
             if n_crops > 1 or (t == 0 and n_crops == 1):
                 ax_map = fig.add_subplot(gs[t * per_K_rows, 0])
@@ -337,6 +332,11 @@ class ImageSaliencyModel(object):
                         sharey=ax_map,
                     )
                 aspectRatio = aspectRatios[i]
+                if t == 0:
+                    print("The best")
+                    print(salient_x, salient_y, saliency_score)
+                    x, y, w, h = generate_crop(img, salient_x, salient_y, aspectRatio)
+                    print("Got this,", x, y, w, h)
                 self.plot_crop_area(
                     img,
                     salient_x,
