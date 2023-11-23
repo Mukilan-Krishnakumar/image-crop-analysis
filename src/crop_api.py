@@ -369,7 +369,7 @@ class ImageSaliencyModel(object):
             #aspectRatios = [aspect_ratio, 0.56, 1.0, 1.14, 2.0]
         # Experimenting of original crop
         if aspectRatios is None:
-            aspectRatios = [aspect_ratio]
+            aspectRatios = [1.77, 1.33, 1.0]
 
         print("Current Aspect Ratio of image", aspect_ratio)
 
