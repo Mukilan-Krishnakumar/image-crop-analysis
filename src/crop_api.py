@@ -405,9 +405,11 @@ class ImageSaliencyModel(object):
         salient_x, salient_y, saliency_score = sx[t], sy[t], sz[t]
         logging.info(f"t={t}: {(salient_x, salient_y, saliency_score)}")
 
+        crop_list = []
         for i, original_crop in enumerate(output["crops"]):
             aspectRatio = aspectRatios[i]
             x, y, w, h = original_crop
+            crop_list.append((x, y, w, h))
             print("Got these as original crop", x, y, w, h)
             if is_symmetric(img):
                 print("Yess, it is symmetric")
@@ -416,7 +418,7 @@ class ImageSaliencyModel(object):
                 return (x, y, w, h)
 
         # Worst case, when none of the crops are symmetric
-        return (0, 0, img_w, img_h)
+        return crop_list
 
     def plot_img_crops_using_img(
         self,
