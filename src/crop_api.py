@@ -250,7 +250,6 @@ class ImageSaliencyModel(object):
         img = mpimg.imread(img_path)
         img_h, img_w = img.shape[:2]
 
-
         print(aspectRatios, img_w, img_h)
 
         if aspectRatios is None:
@@ -261,7 +260,10 @@ class ImageSaliencyModel(object):
 
         output = self.get_output(img_path, aspectRatios=aspectRatios)
         n_crops = len(output["crops"])
-        salient_x, salient_y, = output[
+        (
+            salient_x,
+            salient_y,
+        ) = output[
             "salient_point"
         ][0]
         # img_w, img_h = img.shape[:2]
@@ -348,21 +350,36 @@ class ImageSaliencyModel(object):
             self.plot_saliency_scores_for_index(img, all_salient_points, ax=ax)
         fig.tight_layout()
 
-    def crop_based_on_aspect_ratio(self,img_path,topK=1,aspectRatios=None,checkSymmetry=True,sample=False,col_wrap=None, add_saliency_line=True):
+    def crop_based_on_aspect_ratio(
+        self,
+        img_path,
+        topK=1,
+        aspectRatios=None,
+        checkSymmetry=True,
+        sample=False,
+        col_wrap=None,
+        add_saliency_line=True,
+    ):
         img = mpimg.imread(img_path)
-        img_h, img_w = img.shape[:2]    
+        img_h, img_w = img.shape[:2]
         aspect_ratio = img_w / img_h
         aspect_ratio = round(aspect_ratio, 2)
+        # Aspect Ratio list
         if aspectRatios is None:
-            aspectRatios = [aspect_ratio]
+            aspectRatios = [aspect_ratio, 0.56, 1.0, 1.14, 2.0]
 
         print("Current Aspect Ratio of image", aspect_ratio)
 
         output = self.get_output(img_path, aspectRatios=aspectRatios)
         n_crops = len(output["crops"])
-        salient_x, salient_y, = output["salient_point"][0]
+        (
+            salient_x,
+            salient_y,
+        ) = output[
+            "salient_point"
+        ][0]
         # img_w, img_h = img.shape[:2]
-        
+
         # Sort based on saliency score
         all_salient_points = output["all_salient_points"]
         sx, sy, sz = zip(*sorted(all_salient_points, key=lambda x: x[-1], reverse=True))
@@ -387,12 +404,14 @@ class ImageSaliencyModel(object):
 
         for i, original_crop in enumerate(output["crops"]):
             aspectRatio = aspectRatios[i]
-            if t == 0:
+            x, y, w, h = original_crop
+            print("Got these as original crop", x, y, w, h)
+            if is_symmetric(img):
                 x, y, w, h = generate_crop(img, salient_x, salient_y, aspectRatio)
-                
-        return (x, y, w, h)
-        
+                return (x, y, w, h)
 
+        # Worst case, when none of the crops are symmetric
+        return (0.0, 0.0, img_w, img_h)
 
     def plot_img_crops_using_img(
         self,
