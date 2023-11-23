@@ -365,8 +365,11 @@ class ImageSaliencyModel(object):
         aspect_ratio = img_w / img_h
         aspect_ratio = round(aspect_ratio, 2)
         # Aspect Ratio list
+        #if aspectRatios is None:
+            #aspectRatios = [aspect_ratio, 0.56, 1.0, 1.14, 2.0]
+        # Experimenting of original crop
         if aspectRatios is None:
-            aspectRatios = [aspect_ratio, 0.56, 1.0, 1.14, 2.0]
+            aspectRatios = [aspect_ratio]
 
         print("Current Aspect Ratio of image", aspect_ratio)
 
